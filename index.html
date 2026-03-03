@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>新媒体特征连连看 · 4399动画版</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #e6f0fa 0%, #d9e4f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* ===== 4399风格背景浮动元素 ===== */
+        .floating-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .floating-bg div {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 220, 150, 0.25);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation: floatAround 14s infinite alternate;
+        }
+        @keyframes floatAround {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(40px, -30px) rotate(180deg); }
+        }
+        .floating-bg div:nth-child(1) { top: 10%; left: 5%; width: 60px; height: 60px; background: rgba(170, 220, 255, 0.2); animation-duration: 18s; }
+        .floating-bg div:nth-child(2) { top: 80%; left: 85%; width: 80px; height: 80px; background: rgba(255, 200, 200, 0.2); animation-duration: 22s; }
+        .floating-bg div:nth-child(3) { top: 40%; left: 70%; width: 50px; height: 50px; background: rgba(200, 255, 200, 0.2); animation-duration: 12s; }
+        .floating-bg div:nth-child(4) { top: 70%; left: 20%; width: 70px; height: 70px; background: rgba(255, 180, 255, 0.2); animation-duration: 20s; }
+        .floating-bg div:nth-child(5) { top: 20%; left: 90%; width: 40px; height: 40px; background: rgba(255, 255, 180, 0.2); animation-duration: 16s; }
+
+        /* ===== 主容器 ===== */
+        .game-container {
+            width: 100%;
+            max-width: 820px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 56px 56px 42px 42px;
+            box-shadow: 0 20px 40px rgba(0, 20, 50, 0.2), 0 8px 20px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+            padding: 24px 16px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 10;
+            animation: containerPop 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+        }
+        @keyframes containerPop {
+            0% { transform: scale(0.92) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* ===== 标题区域 ===== */
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a2f4f;
+            margin-bottom: 4px;
+            text-shadow: 0 4px 8px rgba(255, 255, 240, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: slideInDown 0.5s;
+        }
+        @keyframes slideInDown {
+            0% { transform: translateY(-40px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .mascot {
+            font-size: 2.8rem;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .sub {
+            text-align: center;
+            color: #2a4a6e;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 18px;
+            background: rgba(255, 255, 255, 0.7);
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 8px 28px;
+            border-radius: 60px;
+            border: 2px solid #ffb882;
+            box-shadow: 0 4px 0 #d47c4a;
+            animation: fadeIn 0.7s;
+        }
+
+        /* ===== 统计行 (置于游戏区上方) ===== */
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0 20px 0;
+            padding: 12px 22px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 60px;
+            border: 2px solid #aad0f5;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e3a5f;
+            box-shadow: 0 6px 0 #7fa3c4;
+            animation: slideInUp 0.5s;
+        }
+        @keyframes slideInUp {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .timer {
+            background: #ffecb3;
+            padding: 8px 24px;
+            border-radius: 40px;
+            color: #b45f06;
+            border: 2px solid #ffb74d;
+            box-shadow: 0 4px 0 #b17d4b;
+            transition: 0.1s;
+        }
+        .timer.pulse {
+            animation: pulse 0.3s;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); background: #ffe082; }
+            100% { transform: scale(1); }
+        }
+        .today-count {
+            background: #d4e6f1;
+            padding: 8px 24px;
+            border-radius: 40px;
+            color: #003b66;
+            border: 2px solid #7fa3c4;
+            box-shadow: 0 4px 0 #5f7a9c;
+        }
+        .today-count.pop {
+            animation: popText 0.2s;
+        }
+        @keyframes popText {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* ===== 游戏区 ===== */
+        .play-area {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 20px;
+            min-height: 500px;
+            margin: 0 0 15px;
+            animation: cardAreaFade 0.7s;
+        }
+        @keyframes cardAreaFade {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-width: 0;
+        }
+        .column h2 {
+            font-size: 1.25rem;
+            color: #1a334d;
+            font-weight: 600;
+            padding-left: 12px;
+            margin-bottom: 4px;
+            border-left: 8px solid #ff8a5c;
+            background: linear-gradient(to right, rgba(255, 138, 92, 0.15), transparent);
+            border-radius: 0 30px 0 0;
+        }
+
+        /* 卡片基础样式 + 入场动画 */
+        .card {
+            border-radius: 32px;
+            box-shadow: 0 8px 14px rgba(0, 20, 30, 0.1);
+            font-size: 0.98rem;
+            line-height: 1.4;
+            font-weight: 500;
+            color: #152b3c;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+            cursor: pointer;
+            word-break: break-word;
+            backdrop-filter: blur(2px);
+            min-height: 110px;
+            animation: cardEnter 0.5s ease-out;
+        }
+        @keyframes cardEnter {
+            0% { opacity: 0; transform: scale(0.8); }
+            80% { transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* 左侧卡片翻转容器 */
+        .left-card {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 32px;
+            box-shadow: 0 8px 14px rgba(0, 20, 30, 0.1);
+            min-height: 110px;
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 32px;
+            padding: 16px 10px;
+            border: 3px solid #6f9bce;
+            background: #fefefe;
+            color: #152b3c;
+        }
+        .flip-card-front {
+            transform: rotateY(0deg);
+            z-index: 2;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+            background: #f0d9b0;
+            border-color: #ff8a5c;
+            font-size: 3rem;
+            line-height: 1;
+        }
+        .right-card {
+            background: #fff8ef;
+            border: 3px solid #f3b27a;
+            padding: 16px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        /* 马卡龙配色选中效果 (5种颜色) */
+        .left-card.selected.scene-0 .flip-card-front { background: #FFB7B2; border-color: #f07d4b; }
+        .left-card.selected.scene-1 .flip-card-front { background: #FFDAC1; border-color: #f07d4b; }
+        .left-card.selected.scene-2 .flip-card-front { background: #E2F0CB; border-color: #f07d4b; }
+        .left-card.selected.scene-3 .flip-card-front { background: #B5EAD7; border-color: #f07d4b; }
+        .left-card.selected.scene-4 .flip-card-front { background: #C7CEEA; border-color: #f07d4b; }
+
+        /* 匹配后样式 */
+        .card.matched .flip-card-front,
+        .card.matched .flip-card-back,
+        .right-card.matched {
+            opacity: 0.8;
+            background: #c8dbc8 !important;
+            border-color: #2b8c6b !important;
+            pointer-events: none;
+            filter: grayscale(0.15);
+            background-image: repeating-linear-gradient(45deg, rgba(60, 140, 100, 0.1) 0px, rgba(60, 140, 100, 0.1) 6px, transparent 6px, transparent 12px);
+        }
+
+        /* 正确连线弹跳动画 + 闪光 */
+        @keyframes popFlash {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.1); background-color: #d4f0d4; border-color: #3ba86d; box-shadow: 0 0 20px #a3d9a5; }
+            70% { transform: scale(1.05); box-shadow: 0 0 30px #6fbf73; }
+            100% { transform: scale(1); }
+        }
+        .card.pop-animate .flip-card-front,
+        .card.pop-animate .flip-card-back,
+        .right-card.pop-animate {
+            animation: popFlash 0.3s ease 2;
+        }
+
+        /* 错误连线抖动动画 + 红闪 */
+        @keyframes shakeFlash {
+            0%, 100% { transform: translateX(0); background-color: #ffe1e1; }
+            20% { transform: translateX(-8px); background-color: #ffb6b6; }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+        .card.shake-animate .flip-card-front,
+        .card.shake-animate .flip-card-back,
+        .right-card.shake-animate {
+            animation: shakeFlash 0.35s ease-in-out;
+            border-color: #c55a5a !important;
+        }
+
+        /* 悬停上下浮动 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); box-shadow: 0 18px 24px rgba(0,0,0,0.2); }
+            100% { transform: translateY(0px); }
+        }
+        .left-card:not(.matched):hover .flip-card-inner,
+        .right-card:not(.matched):hover {
+            animation: float 1.5s infinite ease-in-out;
+        }
+
+        /* 鼓励信息条 (红色) */
+        .encouragement {
+            text-align: center;
+            margin: 10px auto 0;
+            padding: 8px 22px;
+            background: #ffecb3;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ff0000;
+            border: 2px solid #ffb74d;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .encouragement.show {
+            opacity: 1;
+            animation: shake 0.3s;
+        }
+
+        /* 画布连线 */
+        .canvas-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 20;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 底部按钮区域 */
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            gap: 15px;
+        }
+        .reset-btn {
+            background: #1e3a5f;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 16px 30px;
+            border-radius: 50px;
+            box-shadow: 0 12px 0 #0f263d, 0 12px 20px rgba(0, 40, 70, 0.4);
+            cursor: pointer;
+            transition: 0.06s linear;
+            letter-spacing: 1px;
+            flex: 1 1 auto;
+            min-width: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 2px solid #ffcf9a;
+        }
+        .reset-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 6px 0 #0f263d, 0 12px 20px rgba(0, 40, 70, 0.4);
+        }
+        .reset-btn.pop-animate {
+            animation: popFlash 0.3s;
+        }
+        .message {
+            background: #f4f9ff;
+            border-radius: 50px;
+            padding: 12px 26px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #003b66;
+            border: 3px solid #aad0f5;
+            flex: 1 1 auto;
+            text-align: center;
+            min-width: 170px;
+            box-shadow: 0 6px 0 #7fa3c4;
+        }
+
+        .encourage-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+            min-height: 50px;
+        }
+
+        /* 弹窗样式 (4399风格) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 60px;
+            padding: 40px 50px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 20, 40, 0.3), 0 10px 0 #b48b5a;
+            border: 4px solid #ffb882;
+            max-width: 90%;
+            animation: zoomIn 0.3s;
+        }
+        @keyframes zoomIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal-content h2 {
+            font-size: 2.2rem;
+            color: #1a2f4f;
+            margin-bottom: 20px;
+        }
+        .modal-content p {
+            font-size: 1.3rem;
+            color: #2a4a6e;
+            margin-bottom: 30px;
+        }
+        .start-btn {
+            background: #ff8a5c;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            padding: 16px 50px;
+            border-radius: 60px;
+            box-shadow: 0 10px 0 #b1451a;
+            cursor: pointer;
+            transition: 0.05s linear;
+            border: 3px solid #ffe0b0;
+        }
+        .start-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 5px 0 #b1451a;
+        }
+
+        @media (max-width: 550px) {
+            .game-container { padding: 16px 8px; border-radius: 40px; }
+            h1 { font-size: 2rem; }
+            .flip-card-front, .flip-card-back, .right-card { padding: 12px 6px; font-size: 0.82rem; min-height: 100px; }
+            .column { gap: 12px; }
+            .stats-row { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 4399风格背景浮动元素 -->
+    <div class="floating-bg">
+        <div></div><div></div><div></div><div></div><div></div>
+    </div>
+
+    <!-- 开始弹窗 -->
+    <div id="startModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>✨ 新媒体特征连连看 ✨</h2>
+            <p>考验你的时候到啦！</p>
+            <button class="start-btn" id="startChallengeBtn">开始挑战</button>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <h1>
+            <span class="mascot" id="mascot">😊</span> 新媒体特征连连看 <span>✨</span>
+        </h1>
+        <div class="sub">点击左边场景，再点右边特征</div>
+
+        <!-- 统计行：计时器 + 今日挑战次数 (置于游戏区上方) -->
+        <div class="stats-row">
+            <span class="timer" id="timerDisplay">00:00</span>
+            <span class="today-count" id="todayCount">今日挑战: 0</span>
+        </div>
+
+        <div class="play-area" id="playArea">
+            <div class="column left" id="leftColumn"></div>
+            <div class="column right" id="rightColumn"></div>
+            <div class="canvas-layer" id="canvasLayer">
+                <canvas id="lineCanvas"></canvas>
+            </div>
+        </div>
+
+        <!-- 鼓励信息条 -->
+        <div class="encourage-container">
+            <div class="encouragement" id="encouragementMsg">❌ 不对哦再考虑一下吧</div>
+        </div>
+
+        <div class="footer">
+            <button class="reset-btn" id="resetGameBtn"><span>🔄</span> 洗牌重连</button>
+            <div class="message" id="gameMessage">连线 0 / 5</div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 音效系统 (同前) ----------
+            let audioCtx = null;
+            function initAudio() {
+                if (audioCtx) return audioCtx;
+                try {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) { console.warn('Web Audio不可用'); }
+                return audioCtx;
+            }
+            function playCorrectSound() {
+                const ctx = initAudio(); if (!ctx) return;
+                const resumeAndPlay = () => {
+                    if (ctx.state === 'suspended') { ctx.resume().then(() => actuallyPlayCorrect(ctx)).catch(() => {}); }
+                    else { actuallyPlayCorrect(ctx); }
+                };
+                resumeAndPlay();
+            }
+            function playWrongSound() {
+                const ctx = initAudio(); if (!ctx) return;
+                const resumeAndPlay = () => {
+                    if (ctx.state === 'suspended') { ctx.resume().then(() => actuallyPlayWrong(ctx)).catch(() => {}); }
+                    else { actuallyPlayWrong(ctx); }
+                };
+                resumeAndPlay();
+            }
+            function playVictorySound() {
+                const ctx = initAudio(); if (!ctx) return;
+                const resumeAndPlay = () => {
+                    if (ctx.state === 'suspended') { ctx.resume().then(() => actuallyPlayVictory(ctx)).catch(() => {}); }
+                    else { actuallyPlayVictory(ctx); }
+                };
+                resumeAndPlay();
+            }
+            function actuallyPlayCorrect(ctx) {
+                const now = ctx.currentTime;
+                const osc1 = ctx.createOscillator(), osc2 = ctx.createOscillator();
+                const gain1 = ctx.createGain(), gain2 = ctx.createGain(), merge = ctx.createGain();
+                merge.gain.value = 0.2;
+                osc1.type = 'sine'; osc2.type = 'triangle';
+                osc1.frequency.value = 880; osc2.frequency.value = 1320;
+                osc1.connect(gain1); osc2.connect(gain2);
+                gain1.connect(merge); gain2.connect(merge); merge.connect(ctx.destination);
+                gain1.gain.setValueAtTime(0, now); gain1.gain.linearRampToValueAtTime(0.25, now + 0.02); gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                gain2.gain.setValueAtTime(0, now); gain2.gain.linearRampToValueAtTime(0.2, now + 0.02); gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                osc1.start(now); osc2.start(now); osc1.stop(now + 0.3); osc2.stop(now + 0.25);
+            }
+            function actuallyPlayWrong(ctx) {
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator(); osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(80, now + 0.15);
+                const filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 500; filter.Q.value = 5;
+                const gain = ctx.createGain(); gain.gain.setValueAtTime(0.25, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                osc.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+                osc.start(now); osc.stop(now + 0.18);
+                const bufferSize = 256; const noise = ctx.createScriptProcessor(bufferSize, 1, 1);
+                noise.onaudioprocess = (e) => { let o = e.outputBuffer.getChannelData(0); for(let i=0; i<bufferSize; i++) o[i] = (Math.random()*2-1)*0.06; };
+                const noiseGain = ctx.createGain(); noiseGain.gain.setValueAtTime(0.4, now); noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                noise.connect(noiseGain); noiseGain.connect(ctx.destination);
+                setTimeout(() => { noise.disconnect(); noiseGain.disconnect(); }, 200);
+            }
+            function actuallyPlayVictory(ctx) {
+                const now = ctx.currentTime; const base = 523.25;
+                [base, base*5/4, base*3/2].forEach(f => {
+                    const o = ctx.createOscillator(); o.type='triangle'; o.frequency.value=f;
+                    const g = ctx.createGain(); g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(0.15,now+0.02); g.gain.exponentialRampToValueAtTime(0.001,now+1.0);
+                    o.connect(g); g.connect(ctx.destination); o.start(now); o.stop(now+1.0);
+                });
+                [base*2, base*2*5/4, base*2*3/2, base*4].forEach((f,i) => {
+                    const o = ctx.createOscillator(); o.type='sine'; o.frequency.value=f;
+                    const g = ctx.createGain(); let t = now+0.15+i*0.08;
+                    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.2,t+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+0.4);
+                    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+0.4);
+                });
+            }
+
+            // ---------- 游戏数据 ----------
+            const scenes = [
+                { id: 1, text: '某品牌通过社交媒体与用户直接互动，及时回复评论', icon: '💬' },
+                { id: 2, text: '用户随时随地使用手机刷短视频、看直播', icon: '📱' },
+                { id: 3, text: '一条新闻在几分钟内传遍全网', icon: '⚡' },
+                { id: 4, text: '今日头条根据兴趣推荐个性化内容', icon: '🎯' },
+                { id: 5, text: '一个企业账号发布图文、视频、直播、投票等多种形式', icon: '🎨' }
+            ];
+            const featurePool = [
+                { id: 1, text: '传播行为个性化' },
+                { id: 2, text: '传播方式双向化' },
+                { id: 3, text: '接收方式移动化' },
+                { id: 4, text: '运营内容丰富化' },
+                { id: 5, text: '传播速度实时化' }
+            ];
+            const sceneToFeature = { 1:2, 2:3, 3:5, 4:1, 5:4 };
+
+            let matchedPairs = [];
+            let selectedLeftIndex = null;
+            let rightFeatures = [];
+
+            const leftCol = document.getElementById('leftColumn');
+            const rightCol = document.getElementById('rightColumn');
+            const canvas = document.getElementById('lineCanvas');
+            const ctx = canvas.getContext('2d');
+            const gameMsg = document.getElementById('gameMessage');
+            const resetBtn = document.getElementById('resetGameBtn');
+            const encouragement = document.getElementById('encouragementMsg');
+            const mascot = document.getElementById('mascot');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const todayCountSpan = document.getElementById('todayCount');
+
+            let timerInterval = null;
+            let timerSeconds = 0;
+            let todayCount = 0;
+
+            // 本地存储：今日挑战次数
+            function loadTodayCount() {
+                const stored = localStorage.getItem('newmedia_challenge_count');
+                const today = new Date().toISOString().slice(0,10);
+                if (stored) {
+                    try {
+                        const data = JSON.parse(stored);
+                        if (data.date === today) { todayCount = data.count; }
+                        else { todayCount = 0; localStorage.setItem('newmedia_challenge_count', JSON.stringify({date: today, count: 0})); }
+                    } catch(e) { todayCount = 0; }
+                } else { todayCount = 0; localStorage.setItem('newmedia_challenge_count', JSON.stringify({date: today, count: 0})); }
+                todayCountSpan.innerText = `今日挑战: ${todayCount}`;
+                todayCountSpan.classList.add('pop'); setTimeout(() => todayCountSpan.classList.remove('pop'), 200);
+            }
+            function incrementTodayCount() {
+                const today = new Date().toISOString().slice(0,10);
+                let data;
+                try { data = JSON.parse(localStorage.getItem('newmedia_challenge_count')) || {date: today, count: 0}; }
+                catch { data = {date: today, count: 0}; }
+                if (data.date !== today) { data = {date: today, count: 1}; }
+                else { data.count += 1; }
+                todayCount = data.count;
+                localStorage.setItem('newmedia_challenge_count', JSON.stringify(data));
+                todayCountSpan.innerText = `今日挑战: ${todayCount}`;
+                todayCountSpan.classList.add('pop'); setTimeout(() => todayCountSpan.classList.remove('pop'), 200);
+            }
+
+            // 计时器控制
+            function startTimer() { if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(() => { timerSeconds++; updateTimerDisplay(); }, 1000); }
+            function stopTimer() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }
+            function resetTimer() { stopTimer(); timerSeconds = 0; updateTimerDisplay(); }
+            function updateTimerDisplay() {
+                const mins = Math.floor(timerSeconds / 60); const secs = timerSeconds % 60;
+                timerDisplay.textContent = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+                timerDisplay.classList.add('pulse'); setTimeout(() => timerDisplay.classList.remove('pulse'), 200);
+            }
+
+            function shuffleArray(arr) { for (let i = arr.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+            function initRightOrder() { rightFeatures = shuffleArray([...featurePool]); }
+
+            // 绘制连线
+            function drawLines() {
+                const container = document.getElementById('playArea');
+                const rect = container.getBoundingClientRect();
+                if (rect.width === 0) return;
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+                canvas.style.width = rect.width + 'px'; canvas.style.height = rect.height + 'px';
+                ctx.scale(dpr, dpr); ctx.clearRect(0, 0, rect.width, rect.height);
+                if (matchedPairs.length === 0) return;
+                const leftCards = document.querySelectorAll('.left-card');
+                const rightCards = document.querySelectorAll('.right-card');
+                ctx.lineWidth = 6; ctx.shadowColor = '#2e7d32'; ctx.shadowBlur = 10; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+                for (let pair of matchedPairs) {
+                    const leftIdx = pair.leftIdx, rightIdx = pair.rightIdx;
+                    if (!leftCards[leftIdx] || !rightCards[rightIdx]) continue;
+                    const leftRect = leftCards[leftIdx].getBoundingClientRect();
+                    const rightRect = rightCards[rightIdx].getBoundingClientRect();
+                    const containerRect = container.getBoundingClientRect();
+                    const startX = leftRect.right - containerRect.left - 8;
+                    const startY = leftRect.top + leftRect.height/2 - containerRect.top;
+                    const endX = rightRect.left - containerRect.left + 8;
+                    const endY = rightRect.top + rightRect.height/2 - containerRect.top;
+                    ctx.beginPath();
+                    const cp1x = startX + (endX - startX)*0.4, cp1y = startY - 16;
+                    const cp2x = endX - (endX - startX)*0.4, cp2y = endY + 16;
+                    ctx.moveTo(startX, startY); ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, endX, endY);
+                    ctx.strokeStyle = '#3ba86d'; ctx.stroke();
+                    ctx.fillStyle = '#1d6b3c'; ctx.shadowBlur = 14;
+                    ctx.beginPath(); ctx.arc(startX, startY, 8, 0, 2*Math.PI); ctx.fill();
+                    ctx.beginPath(); ctx.arc(endX, endY, 8, 0, 2*Math.PI); ctx.fill();
+                }
+                ctx.shadowBlur = 0;
+            }
+
+            function showEncouragement() {
+                encouragement.classList.add('show'); mascot.textContent = '😢';
+                setTimeout(() => {
+                    encouragement.classList.remove('show');
+                    if (matchedPairs.length < 5) mascot.textContent = '😊'; else mascot.textContent = '🥳';
+                }, 2000);
+            }
+
+            function handleVictory() {
+                gameMsg.innerText = '🎉 恭喜，闯关成功！'; mascot.textContent = '🥳';
+                playVictorySound(); stopTimer(); incrementTodayCount();
+            }
+
+            function renderCards() {
+                leftCol.innerHTML = '<h2>📌 真实场景</h2>';
+                scenes.forEach((scene, idx) => {
+                    const card = document.createElement('div');
+                    card.className = `card left-card scene-${idx}`;
+                    card.dataset.sceneId = scene.id; card.dataset.leftIdx = idx;
+                    const inner = document.createElement('div'); inner.className = 'flip-card-inner';
+                    const front = document.createElement('div'); front.className = 'flip-card-front'; front.textContent = scene.text;
+                    const back = document.createElement('div'); back.className = 'flip-card-back'; back.textContent = scene.icon;
+                    inner.appendChild(front); inner.appendChild(back); card.appendChild(inner);
+                    if (matchedPairs.some(p => p.leftIdx === idx)) card.classList.add('matched');
+                    leftCol.appendChild(card);
+                });
+                rightCol.innerHTML = '<h2>✨ 新媒体特征</h2>';
+                rightFeatures.forEach((feat, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'card right-card';
+                    card.dataset.featureId = feat.id; card.dataset.rightIdx = idx;
+                    card.textContent = feat.text;
+                    if (matchedPairs.some(p => p.rightIdx === idx)) card.classList.add('matched');
+                    rightCol.appendChild(card);
+                });
+                document.querySelectorAll('.left-card').forEach(c => c.classList.remove('selected'));
+                if (selectedLeftIndex !== null) {
+                    const leftCards = document.querySelectorAll('.left-card');
+                    if (leftCards[selectedLeftIndex] && !leftCards[selectedLeftIndex].classList.contains('matched')) {
+                        leftCards[selectedLeftIndex].classList.add('selected');
+                    } else selectedLeftIndex = null;
+                }
+                const completed = matchedPairs.length;
+                if (completed === 5) { gameMsg.innerText = '🎉 恭喜，闯关成功！'; mascot.textContent = '🥳'; }
+                else { gameMsg.innerText = `已完成 ${completed} / 5`; if (mascot.textContent !== '😢') mascot.textContent = '😊'; }
+                drawLines();
+            }
+
+            function animateCard(card, type) { if (!card) return; card.classList.add(type); setTimeout(() => card.classList.remove(type), 400); }
+
+            function handleCardClick(e) {
+                const card = e.target.closest('.card');
+                if (!card || card.classList.contains('matched')) return;
+                initAudio();
+                if (card.classList.contains('left-card')) {
+                    const leftIdx = parseInt(card.dataset.leftIdx);
+                    if (matchedPairs.some(p => p.leftIdx === leftIdx)) return;
+                    document.querySelectorAll('.left-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected'); selectedLeftIndex = leftIdx;
+                } else if (card.classList.contains('right-card')) {
+                    if (selectedLeftIndex === null) { playWrongSound(); animateCard(card, 'shake-animate'); showEncouragement(); return; }
+                    const rightIdx = parseInt(card.dataset.rightIdx);
+                    if (matchedPairs.some(p => p.rightIdx === rightIdx)) return;
+                    const leftCard = document.querySelector(`.left-card[data-left-idx="${selectedLeftIndex}"]`);
+                    if (!leftCard || leftCard.classList.contains('matched')) {
+                        document.querySelectorAll('.left-card').forEach(c => c.classList.remove('selected'));
+                        selectedLeftIndex = null; return;
+                    }
+                    const sceneId = parseInt(leftCard.dataset.sceneId);
+                    const featureId = parseInt(card.dataset.featureId);
+                    if (sceneToFeature[sceneId] === featureId) {
+                        playCorrectSound();
+                        animateCard(leftCard, 'pop-animate'); animateCard(card, 'pop-animate');
+                        matchedPairs.push({ leftIdx: selectedLeftIndex, rightIdx: rightIdx });
+                        document.querySelectorAll('.left-card').forEach(c => c.classList.remove('selected'));
+                        selectedLeftIndex = null;
+                        renderCards();
+                        if (matchedPairs.length === 5) handleVictory();
+                    } else {
+                        playWrongSound();
+                        animateCard(leftCard, 'shake-animate'); animateCard(card, 'shake-animate');
+                        document.querySelectorAll('.left-card').forEach(c => c.classList.remove('selected'));
+                        selectedLeftIndex = null; showEncouragement();
+                    }
+                }
+            }
+
+            leftCol.addEventListener('click', handleCardClick);
+            rightCol.addEventListener('click', handleCardClick);
+
+            resetBtn.addEventListener('click', () => {
+                matchedPairs = []; selectedLeftIndex = null; initRightOrder(); renderCards();
+                mascot.textContent = '😊';
+                resetBtn.classList.add('pop-animate'); setTimeout(() => resetBtn.classList.remove('pop-animate'), 400);
+                playWrongSound(); encouragement.classList.remove('show');
+                resetTimer(); startTimer();
+            });
+
+            window.addEventListener('resize', () => drawLines());
+
+            function initGame() { initRightOrder(); renderCards(); loadTodayCount(); resetTimer(); }
+            initGame();
+
+            // 弹窗
+            const modal = document.getElementById('startModal');
+            const startBtn = document.getElementById('startChallengeBtn');
+            startBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+                resetTimer(); startTimer();
+            });
+        })();
+    </script>
+    <!-- 说明：本页面包含所有动画效果，可在任意电脑浏览器中运行 -->
+</body>
+</html>
